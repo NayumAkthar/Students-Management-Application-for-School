@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); 
 
 exports.addStudent = async (req, res) => {
   const { admission_no, name, email, class: studentClass, password } = req.body;
@@ -11,15 +11,13 @@ exports.addStudent = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-
-    await db.promise().query(
+    await db.promise().execute(
       `INSERT INTO students (admission_no, name, email, class, password)
        VALUES (?, ?, ?, ?, ?)`,
       [admission_no, name, email, studentClass, hashedPassword]
     );
 
- 
-    await db.promise().query(
+    await db.promise().execute(
       `INSERT INTO users (email, password, role)
        VALUES (?, ?, 'student')`,
       [email, hashedPassword]
@@ -28,35 +26,16 @@ exports.addStudent = async (req, res) => {
     res.json({ message: "Student added successfully" });
   } catch (error) {
     console.error("Error adding student:", error);
-
-    
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ message: "Email already exists" });
     }
-
     res.status(500).json({ message: "Failed to add student" });
   }
 };
 
-
-// // GET /api/admin/students
-// exports.getAllStudents = async (req, res) => {
-//   try {
-//     const [rows] = await db.promise().query("SELECT admission_no, name, email, class FROM students");
-//     res.json({ students: rows });
-//   } catch (err) {
-//     console.error("Error fetching students:", err);
-//     res.status(500).json({ message: "Failed to fetch students" });
-//   }
-// };
-
-
-
-
 exports.assignMarks = async (req, res) => {
   const {
     admission_no,
-    email, 
     first_language,
     second_language,
     third_language,
@@ -66,7 +45,8 @@ exports.assignMarks = async (req, res) => {
   } = req.body;
 
   try {
-    await db.promise().query(
+  
+    await db.promise().execute(
       `INSERT INTO marks (admission_no, first_language, second_language, third_language, maths, science, social)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [admission_no, first_language, second_language, third_language, maths, science, social]
@@ -79,12 +59,10 @@ exports.assignMarks = async (req, res) => {
   }
 };
 
-
-
-
 exports.getAllStudents = async (req, res) => {
   try {
-    const [rows] = await db.promise().query(`
+   
+    const [rows] = await db.promise().execute(`
       SELECT s.admission_no, s.name, s.email, s.class, m.total_marks
       FROM students s
       LEFT JOIN marks m ON s.admission_no = m.admission_no
@@ -97,10 +75,6 @@ exports.getAllStudents = async (req, res) => {
   }
 };
 
-
-
-
-
 exports.resetStudentPassword = async (req, res) => {
   const { email, newPassword } = req.body;
 
@@ -111,19 +85,9 @@ exports.resetStudentPassword = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-   
-    const [studentResult] = await db
-      .promise()
-      .query('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]);
+    await db.promise().execute('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]);
 
-  
-    const [userResult] = await db
-      .promise()
-      .query('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
-
-    if (studentResult.affectedRows === 0 && userResult.affectedRows === 0) {
-      return res.status(404).json({ message: 'Student not found in either table.' });
-    }
+    await db.promise().execute('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
 
     res.json({ message: 'Password reset successfully.' });
   } catch (error) {
