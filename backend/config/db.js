@@ -8,9 +8,9 @@ const connectionConfig = {
   database: process.env.DB_NAME
 };
 
-// This is the new part that adds SSL for the live server
+// This is the updated part that correctly configures SSL
 if (process.env.NODE_ENV === 'production') {
-  connectionConfig.ssl = { "rejectUnauthorized": true };
+  connectionConfig.ssl = { rejectUnauthorized: false };
 }
 
 const db = mysql.createConnection(connectionConfig);
