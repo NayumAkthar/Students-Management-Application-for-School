@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (!user || user.role !== "admin") {
     alert("Unauthorized access");
-    window.location.href = "../index.html";
+    window.location.href = "./index.html";
     return;
   }
 

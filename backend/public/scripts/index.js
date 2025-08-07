@@ -18,7 +18,7 @@ function handleSubmit(event) {
   }
 
 
-  fetch("http://localhost:3000/api/auth/login", {
+  fetch("/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,9 +37,9 @@ function handleSubmit(event) {
 
       
       if (data.user.role === "admin") {
-        window.location.href = "public/adminDashBoard.html";
+        window.location.href = "adminDashBoard.html";
       } else if (data.user.role === "student") {
-        window.location.href = "public/studentDashBoard.html";
+        window.location.href = "studentDashBoard.html";
       } else {
         alert("Unknown user role");
       }
