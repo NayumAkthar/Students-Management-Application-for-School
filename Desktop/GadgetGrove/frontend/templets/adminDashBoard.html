@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Gadget Grove</title>
+  <link rel="stylesheet" href="../frontend/styles/adminDashBoard.css">
+</head>
+
+<body>
+  <div class="admin-dashboard">
+
+    <aside class="sidebar">
+      <div class="logo">Gadget Grove Admin</div>
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-section="dashboardSection">Dashboard</a>
+        <a href="#add-item" class="nav-item" data-section="addItemSection">Add Mobile</a>
+        <a href="#edit-item" class="nav-item" data-section="editItemSection">Edit Mobile</a>
+        <a href="#add-slides" class="nav-item" data-section="addSlidesSection">Add Slides</a>
+        <a href="#edit-slides" class="nav-item" data-section="editSlidesSection">Edit Slides</a>
+        <a href="#change-password" class="nav-item" data-section="changePasswordSection">Change Password</a>
+      </nav>
+    </aside>
+
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Hello, Admin</h1>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </header>
+
+      <section class="content-area">
+
+        <div id="dashboardSection" class="content-section">
+          <h2>Orders</h2>
+          <div class="order-list" id="order-list">
+            <button onclick="viewOrderDetails('${order.order_id}')">View</button>
+
+
+          </div>
+        </div>
+
+
+        <div class="content-section hidden" id="addItemSection">
+          <h2>Add Mobile</h2>
+          <form id="addItemForm" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="item-name">Mobile Name:</label>
+              <input type="text" id="item-name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="item-brand">Brand:</label>
+              <select id="item-brand" name="brand" required>
+                <option value="">Select Brand</option>
+                <option>iPhone</option>
+                <option>Samsung</option>
+                <option>OnePlus</option>
+                <option>Vivo</option>
+                <option>Realme</option>
+                <option>Oppo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="item-price">Price:</label>
+              <input type="number" id="item-price" name="price" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="item-stock">Stock:</label>
+              <input type="number" id="item-stock" name="stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="item-description">Description:</label>
+              <textarea id="item-description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="item-highlights">Highlights:</label>
+              <textarea id="item-highlights" name="highlights" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="item-image1">Image 1:</label>
+              <input type="file" id="item-image1" name="image1" accept="image/*" required>
+            </div>
+            <div class="form-group">
+              <label for="item-image2">Image 2:</label>
+              <input type="file" id="item-image2" name="image2" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="item-image3">Image 3:</label>
+              <input type="file" id="item-image3" name="image3" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="item-image4">Image 4:</label>
+              <input type="file" id="item-image4" name="image4" accept="image/*">
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="submit-btn">Add Mobile</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="content-section hidden" id="editItemSection">
+          <h2>Edit Mobile</h2>
+          <div class="form-group search-group">
+            <label for="search-mobile">Search Mobile by Name:</label>
+            <div class="search-container">
+              <input type="text" id="search-mobile" name="search-mobile" placeholder="Enter mobile name..." required>
+              <button type="button" onclick="searchMobile()">Search</button>
+            </div>
+          </div>
+          <form id="editItemForm" class="hidden">
+            <input type="hidden" id="edit-id" name="id">
+            <div class="form-group">
+              <label for="edit-name">Mobile Name:</label>
+              <input type="text" id="edit-name" name="name" readonly>
+            </div>
+            <div class="form-group">
+              <label for="edit-brand">Brand:</label>
+              <input type="text" id="edit-brand" name="brand" readonly>
+            </div>
+            <div class="form-group">
+              <label for="edit-price">Price:</label>
+              <input type="number" id="edit-price" name="price" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-stock">Stock:</label>
+              <input type="number" id="edit-stock" name="stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-description">Description:</label>
+              <textarea id="edit-description" name="description" rows="4" readonly></textarea>
+            </div>
+            <div class="form-group">
+              <label for="edit-highlights">Highlights:</label>
+              <textarea id="edit-highlights" name="highlights" rows="4" readonly></textarea>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="submit-btn">Update Mobile</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="content-section hidden" id="addSlidesSection">
+          <h2>Add Slide</h2>
+          <form id="addSlidesForm" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="slide-image">Slide Image:</label>
+              <input type="file" id="slide-image" name="slide-image" accept="image/*" required>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="submit-btn">Add Slide</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="content-section hidden" id="editSlidesSection">
+          <h2>Edit Slides</h2>
+          <ul id="slide-list" class="slide-list"></ul>
+
+          <form id="editSlideForm" class="hidden" enctype="multipart/form-data">
+            <input type="hidden" id="edit-slide-id" name="id">
+
+            <div>
+              <label>Current Slide:</label><br>
+              <img id="current-slide-image" src="" alt="Current Slide" style="max-width: 200px;">
+            </div>
+
+            <div>
+              <label>Upload New Slide:</label><br>
+              <input type="file" name="slide-image" accept="image/*" required>
+            </div>
+
+            <div class="form-buttons">
+              <button type="submit" class="update-btn">Update Slide</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+
+
+        <div class="content-section hidden" id="changePasswordSection">
+          <h2>Change Password</h2>
+          <form id="changePasswordForm">
+            <div class="form-group">
+              <label for="old-password">Old Password:</label>
+              <input type="password" id="old-password" name="old-password" required>
+            </div>
+            <div class="form-group">
+              <label for="new-password">New Password:</label>
+              <input type="password" id="new-password" name="new-password" required>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="submit-btn">Change Password</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../frontend/scripts/adminDashBoard.js"></script>
+  <div id="orderDetailsModal" class="hidden modal">
+    <div class="modal-content">
+      <span class="close-btn"
+        onclick="document.getElementById('orderDetailsModal').classList.add('hidden')">&times;</span>
+      <div id="order-details-body"></div>
+    </div>
+  </div>
+</body>
+
+</html>

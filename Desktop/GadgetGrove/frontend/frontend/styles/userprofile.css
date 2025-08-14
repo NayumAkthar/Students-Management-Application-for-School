@@ -1,0 +1,455 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: black;
+    color: white;
+    padding: 1rem;
+    width: 100%;
+}
+
+.logo {
+    font-size: 30px;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding-right: 30px;
+    padding-inline: 60px;
+}
+
+.search-container {
+    margin-right: 20px;
+}
+
+#search {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    width: 200px;
+}
+
+.nav-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: white;
+}
+
+
+.userprofile,
+.cart {
+    justify-content: right;
+    font-size: 20px;
+    cursor: pointer;
+
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+
+.user-details {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.user-details h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.user-details p {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.address-section {
+    margin-top: 20px;
+}
+
+.address-section.editing .display-address {
+    display: none;
+}
+
+.address-section.editing .edit-address {
+    display: flex;
+    align-items: center;
+}
+
+.address-section.editing .address-form {
+    display: block;
+}
+
+.display-address {
+    color: #666;
+}
+
+.edit-address {
+    display: none;
+    margin-top: 10px;
+}
+
+.edit-address input {
+    width: 70%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.edit-address .save-btn,
+.edit-address .cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-address .save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.edit-address .save-btn:hover {
+    background-color: #218838;
+}
+
+.edit-address .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.edit-address .cancel-btn:hover {
+    background-color: #c82333;
+}
+
+.edit-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.address-form {
+    margin-top: 20px;
+    display: none;
+}
+
+.address-form .form-group {
+    margin-bottom: 15px;
+}
+
+.address-form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.address-form .form-group input,
+.address-form .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.address-form .form-group textarea {
+    resize: vertical;
+}
+
+.address-form .form-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.address-form .save-btn {
+    background-color: #28a745;
+    border-radius: 5px;
+    height: 30px;
+    width: 70px;
+    border: none;
+    color: white;
+}
+
+.address-form .save-btn:hover {
+    background-color: #218838;
+}
+
+.address-form .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    height: 30px;
+    width: 70px;
+    border-radius: 5px;
+}
+
+.address-form .cancel-btn:hover {
+    background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+    .user-details {
+        padding: 15px;
+    }
+
+    .edit-address input {
+        width: 60%;
+    }
+}
+
+
+
+
+
+.orders ul li {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.orders ul li img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+
+.signout-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.signout-btn:hover {
+    background-color: #da190b;
+}
+
+footer {
+    background-color: black;
+    color: #ffffff;
+    padding: 20px;
+    width: 100%;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin: 10px;
+}
+
+.footer-section h3 {
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.footer-section p,
+.footer-section a {
+    color: #cccccc;
+    text-decoration: none;
+    line-height: 1.6;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin: 10px 0;
+}
+
+.footer-section a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #444444;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .logo {
+        font-size: 24px;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: flex-end;
+        padding-inline: 20px;
+    }
+
+    .search-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    #search {
+        width: 100%;
+    }
+
+    .nav-item {
+        padding: 0.3rem 0.8rem;
+        font-size: 16px;
+    }
+
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .user-details,
+    .orders {
+        padding: 15px;
+    }
+
+    .user-details h3,
+    .orders h3 {
+        font-size: 16px;
+    }
+
+    .edit-address input {
+        width: 60%;
+    }
+
+    .edit-btn,
+    .save-btn,
+    .cancel-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .address-form .form-group input,
+    .address-form .form-group textarea {
+        font-size: 14px;
+    }
+
+    .signout-btn {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        min-width: 100%;
+        margin: 10px 0;
+    }
+
+    .footer-section h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 20px;
+    }
+
+    nav {
+        padding-inline: 10px;
+    }
+
+    #search {
+        width: 100%;
+    }
+
+    .container {
+        margin: 5px;
+        padding: 10px;
+    }
+
+    .user-details,
+    .orders {
+        padding: 10px;
+    }
+
+    .user-details h3,
+    .orders h3 {
+        font-size: 14px;
+    }
+
+    .edit-address input {
+        width: 50%;
+    }
+
+    .edit-btn,
+    .save-btn,
+    .cancel-btn {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .address-form .form-group input,
+    .address-form .form-group textarea {
+        font-size: 12px;
+    }
+
+    .signout-btn {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .footer-section p,
+    .footer-section a {
+        font-size: 14px;
+    }
+}

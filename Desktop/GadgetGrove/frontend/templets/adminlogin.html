@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gadget Grove Admin - Login</title>
+  <link rel="stylesheet" href="../frontend/styles/adminlogin.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="left-side">
+      <h1>Gadget Grove Admin</h1>
+      <p>Manage your store securely and efficiently.</p>
+    </div>
+
+    <div class="right-side">
+      <div class="form-container">
+        <h2>Admin Login</h2>
+        <form id="admin-login-form">
+          <div class="form-group">
+            <label for="admin-email">Email</label>
+            <input type="email" id="admin-email" placeholder="Enter admin email" required />
+            <div id="admin-email-error" class="error"></div>
+          </div>
+          <div class="form-group">
+            <label for="admin-password">Password</label>
+            <input type="password" id="admin-password" placeholder="Enter password" required />
+            <div id="admin-password-error" class="error"></div>
+          </div>
+          <button type="submit">Login</button>
+          <div id="login-error" class="error" style="display:none;">Invalid email or password.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../frontend/scripts/adminlogin.js"></script>
+</body>
+</html>
