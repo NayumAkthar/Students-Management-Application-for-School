@@ -1,15 +1,17 @@
-const mysql = require('mysql2/promise'); // Use promise version for async/await
+const mysql = require('mysql2/promise');
 const fs = require('fs'); 
 const path = require('path'); // Node.js path module
 require('dotenv').config();
 
-// Pathing logic: __dirname is 'backend/config'. '..' goes up to 'backend', 
-// the second '..' goes up to the 'root' where 'ca.pem' is located.
-const CA_CERT_PATH = path.join(__dirname, '..', '..', 'ca.pem'); 
+// Pathing logic: __dirname is 'backend/config'. 
+// '..' goes up to 'backend', the second '..' goes up to the 'root'
+// The filename is added directly at the end.
+const CA_CERT_PATH = path.join(__dirname, '..', 'ca.pem'); // <-- THIS IS THE CORRECT PATH
 
 if (!fs.existsSync(CA_CERT_PATH)) {
     console.error('ERROR: CA certificate file not found at:', CA_CERT_PATH);
-    // You should throw an error here to stop deployment if the file is missing!
+    // Showing the absolute path that was searched for is helpful for debugging!
+    console.error('Searched path:', CA_CERT_PATH); 
     throw new Error('Missing CA certificate file required for database connection.');
 }
 
