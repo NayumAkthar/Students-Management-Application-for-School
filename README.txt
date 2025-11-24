@@ -27,7 +27,7 @@ DB_NAME=student_management
 PORT=3000
 
 4. Install Dependencies
-npm install express cors dotenv mysql2 bcrypt
+npm install express cors dotenv mysql2 bcryptjs
 
 5. Create Initial Admin User
 node createAdmin.js
@@ -42,6 +42,9 @@ Features Implemented
 
 • User Authentication
   - Login for Admin and Students
+  - Admin login
+          email   :- admin@school.com
+          passwrod:- Admin@123
   - Change password functionality
 
 • Admin Dashboard
