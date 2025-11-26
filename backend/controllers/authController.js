@@ -10,7 +10,7 @@ exports.login = async (req, res) => {
     if (rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
-// ... (rest of the login function is correct)
+
     const user = rows[0];
     const isMatch = await bcrypt.compare(password, user.password);
 
@@ -35,7 +35,6 @@ exports.changePassword = async (req, res) => {
   const { email, currentPassword, newPassword } = req.body;
 
   try {
-    // FIX 2: Removed .promise()
     const [rows] = await db.execute("SELECT * FROM users WHERE email = ?", [email]); 
 
     if (rows.length === 0) {
@@ -51,7 +50,6 @@ exports.changePassword = async (req, res) => {
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
   
-    // FIX 3: Removed .promise()
     await db.execute("UPDATE users SET password = ? WHERE email = ?", [hashedNewPassword, email]); 
 
     res.json({ message: "Password updated successfully" });

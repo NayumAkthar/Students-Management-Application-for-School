@@ -11,13 +11,13 @@ exports.addStudent = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.promise().execute(
+    await db.execute(
       `INSERT INTO students (admission_no, name, email, class, password)
        VALUES (?, ?, ?, ?, ?)`,
       [admission_no, name, email, studentClass, hashedPassword]
     );
 
-    await db.promise().execute(
+    await db.execute(
       `INSERT INTO users (email, password, role)
        VALUES (?, ?, 'student')`,
       [email, hashedPassword]
@@ -46,7 +46,7 @@ exports.assignMarks = async (req, res) => {
 
   try {
   
-    await db.promise().execute(
+    await db.execute(
       `INSERT INTO marks (admission_no, first_language, second_language, third_language, maths, science, social)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [admission_no, first_language, second_language, third_language, maths, science, social]
@@ -85,9 +85,9 @@ exports.resetStudentPassword = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await db.promise().execute('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]);
+    await db.execute('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]);
 
-    await db.promise().execute('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
+    await db.execute('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
 
     res.json({ message: 'Password reset successfully.' });
   } catch (error) {
