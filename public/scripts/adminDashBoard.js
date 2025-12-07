@@ -12,7 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
 function fetchStudents() {
-  fetch("/api/admin/students")
+  fetch("https://students-management-application-for.onrender.com/api/admin/students")
     .then((res) => res.json())
     .then((data) => {
       const tbody = document.getElementById("studentTableBody");
@@ -48,7 +48,7 @@ document.getElementById("addStudent").addEventListener("submit", (e) => {
     password: document.getElementById("DefaultPass").value.trim(),
   };
 
-  fetch("/api/admin/add-student", {
+  fetch("https://students-management-application-for.onrender.com/api/admin/add-student", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(student),
@@ -76,7 +76,7 @@ document.getElementById("assignMarksForm").addEventListener("submit", (e) => {
   const science = parseInt(document.getElementById("science").value.trim()) || 0;
   const social = parseInt(document.getElementById("social").value.trim()) || 0;
 
-  fetch("/api/admin/assign-marks", {
+  fetch("https://students-management-application-for.onrender.com/api/admin/assign-marks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -140,7 +140,7 @@ function handleChangePassword(event) {
     return;
   }
 
-  fetch("/api/auth/change-password", {
+  fetch("https://students-management-application-for.onrender.com/api/auth/change-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -188,7 +188,7 @@ async function handleResetStudentPassword(event) {
   }
 
   try {
-    const response = await fetch('/api/admin/reset-student-password', {
+    const response = await fetch('https://students-management-application-for.onrender.com/api/admin/reset-student-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, newPassword })

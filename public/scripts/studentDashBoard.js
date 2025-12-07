@@ -6,7 +6,7 @@
           return;
         }
 
-        fetch(`/api/student/profile?email=${user.email}`)
+        fetch(`https://students-management-application-for.onrender.com/api/student/profile?email=${user.email}`)
           .then((res) => res.json())
           .then((data) => {
             const student = data.student;
@@ -74,7 +74,7 @@
           return;
         }
 
-        fetch("/api/auth/change-password", {
+        fetch("https://students-management-application-for.onrender.com/api/auth/change-password", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -85,7 +85,6 @@ exports.resetStudentPassword = async (req, res) => {
 
         await db.execute('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]);
 
-        // CORRECTED TYPO: Changed hashedNewPassword to hashedPassword
         await db.execute('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
 
         res.json({ message: 'Password reset successfully.' });

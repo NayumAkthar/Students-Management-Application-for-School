@@ -18,7 +18,7 @@ function handleSubmit(event) {
   }
 
 
-  fetch("/api/auth/login", {
+  fetch("https://students-management-application-for.onrender.com/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ function handleSubmit(event) {
      localStorage.setItem("user", JSON.stringify({ 
         token: data.token, 
         role: data.role, 
-        email: email // Use the 'email' variable captured from the form
+        email: email 
     }));
 
       
