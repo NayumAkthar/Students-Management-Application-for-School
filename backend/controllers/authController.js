@@ -1,101 +1,77 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs'); 
+const jwt = require('jsonwebtoken'); // You need this for token generation
 
-exports.addStudent = async (req, res) => {
-  const { admission_no, name, email, class: studentClass, password } = req.body;
+// ------------------------------------
+// 1. LOGIN FUNCTION
+// ------------------------------------
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
 
-  if (!admission_no || !name || !email || !studentClass || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required.' });
+    }
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    try {
+        const [rows] = await db.execute('SELECT email, password, role FROM users WHERE email = ?', [email]);
+        const user = rows[0];
 
-    
-    await db.execute(
-      `INSERT INTO students (admission_no, name, email, class, password)
-       VALUES (?, ?, ?, ?, ?)`,
-      [admission_no, name, email, studentClass, hashedPassword]
-    );
+        // 1. Check if user exists
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials.' });
+        }
+        
+        // 2. Check if password matches
+        const isMatch = await bcrypt.compare(password, user.password);
 
- 
-    await db.execute(
-      `INSERT INTO users (email, password, role)
-       VALUES (?, ?, 'student')`,
-      [email, hashedPassword]
-    );
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials.' });
+        }
 
-    res.json({ message: "Student added successfully" });
-  } catch (error) {
-    console.error("Error adding student:", error);
-    if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ message: "Email already exists" });
-    }
-    res.status(500).json({ message: "Failed to add student" });
-  }
+        // 3. Generate Token
+        const token = jwt.sign(
+            { email: user.email, role: user.role }, 
+            process.env.JWT_SECRET || 'your_super_secret_key', // IMPORTANT: Change 'your_super_secret_key' to a secure value in your .env file!
+            { expiresIn: '1h' }
+        );
+
+        res.json({ message: 'Login successful', token, role: user.role });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error during login.' });
+    }
 };
 
-exports.assignMarks = async (req, res) => {
-  const {
-    admission_no,
-    first_language,
-    second_language,
-    third_language,
-    maths,
-    science,
-    social,
-  } = req.body;
+// ------------------------------------
+// 2. CHANGE PASSWORD FUNCTION
+// ------------------------------------
+exports.changePassword = async (req, res) => {
+    const { email, oldPassword, newPassword } = req.body;
+    
+    if (!email || !oldPassword || !newPassword) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
 
-  try {
-  
- 
-    await db.execute(
-      `INSERT INTO marks (admission_no, first_language, second_language, third_language, maths, science, social)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [admission_no, first_language, second_language, third_language, maths, science, social]
-    );
+    try {
+        // 1. Fetch current password hash to verify old password
+        const [rows] = await db.execute('SELECT password FROM users WHERE email = ?', [email]);
+        const user = rows[0];
 
-    res.status(201).json({ message: 'Marks assigned successfully' });
-  } catch (err) {
-    console.error('Error inserting marks:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+        if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
+            return res.status(401).json({ message: 'Invalid credentials or old password.' });
+        }
 
-exports.getAllStudents = async (req, res) => {
-  try {
-   
-    const [rows] = await db.execute(`
-      SELECT s.admission_no, s.name, s.email, s.class, m.total_marks
-      FROM students s
-      LEFT JOIN marks m ON s.admission_no = m.admission_no
-    `);
+        // 2. Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    res.json({ students: rows });
-  } catch (err) {
-    console.error("Error fetching students:", err);
-    res.status(500).json({ message: "Failed to fetch students" });
-  }
-};
+        // 3. Update password in both tables
+        await db.execute('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]); 
+        await db.execute('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
 
-exports.resetStudentPassword = async (req, res) => {
-  const { email, newPassword } = req.body;
+        res.json({ message: 'Password updated successfully.' });
 
-  if (!email || !newPassword) {
-    return res.status(400).json({ message: 'Email and new password are required.' });
-  }
-
-  try {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    
-    await db.execute('UPDATE students SET password = ? WHERE email = ?', [hashedPassword, email]);
-
-    await db.execute('UPDATE users SET password = ? WHERE email = ?', [hashedNewPassword, email]);
-
-    res.json({ message: 'Password reset successfully.' });
-  } catch (error) {
-    console.error('Error resetting password:', error);
-    res.status(500).json({ message: 'Internal server error.' });
-  }
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ message: 'Server error during password change.' });
+    }
 };

@@ -33,12 +33,16 @@ function handleSubmit(event) {
       }
 
       
-      localStorage.setItem("user", JSON.stringify(data.user));
+     localStorage.setItem("user", JSON.stringify({ 
+        token: data.token, 
+        role: data.role, 
+        email: email // Use the 'email' variable captured from the form
+    }));
 
       
-      if (data.user.role === "admin") {
+      if (data.role === "admin") {
         window.location.href = "adminDashBoard.html";
-      } else if (data.user.role === "student") {
+      } else if (data.role === "student") {
         window.location.href = "studentDashBoard.html";
       } else {
         alert("Unknown user role");
