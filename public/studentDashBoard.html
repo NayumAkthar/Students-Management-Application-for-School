@@ -1,79 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Student DashBoard</title>
-        <link rel="stylesheet" href="./styles/studentDashBoard.css">
+  <!DOCTYPE html>
+  <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Student DashBoard</title>
+          <link rel="stylesheet" href="./styles/studentDashBoard.css">
+          
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+      </head>
+      <body>
+          <header>
+            <div class="iconClass"><i class="fa-solid fa-graduation-cap" style="color: #ffffff; font-size: 50px;
+            margin-top:10px;
+            justify-content: left;
+            margin-left: -100px;"></i>
+            </div>
+            <h1>Student DashBoard</h1>
+          </header>
+
+          <main>
+      <div class="card">
+        <h2>Welcome</h2>
+        <p><strong>Name:  </strong> <span id="student-name"></span></p>
+        <p><strong>Admn No:  </strong> <span id="student-admnNo"></span></p>
+        <p><strong>Email: </strong> <span id="student-email"></span></p>
+        <p><strong>Class: </strong> <span id="student-class"></span></p>
         
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    </head>
-    <body>
-        <header>
-          <div class="iconClass"><i class="fa-solid fa-graduation-cap" style="color: #ffffff; font-size: 50px;
-          margin-top:10px;
-          justify-content: left;
-          margin-left: -100px;"></i>
-          </div>
-          <h1>Student DashBoard</h1>
-        </header>
+        </div>
+        <div class="card">
+          <tr>
+          <p><strong>First Language:  </strong> <span id="firstLang"></span></p>
+        <p><strong>Second Language: </strong> <span id="secondLang"></span></p>
+        <p><strong>Third Language:  </strong> <span id="thirdLang"></span></p>
+        <p><strong>Math: </strong> <span id="math"></span></p>
+        <p><strong>Science:  </strong> <span id="science"></span></p>
+        <p><strong>Social:  </strong> <span id="social"></span></p>
+        <br>
+          </tr>
 
-        <main>
-    <div class="card">
-      <h2>Welcome</h2>
-      <p><strong>Name:  </strong> <span id="student-name"></span></p>
-      <p><strong>Admn No:  </strong> <span id="student-admnNo"></span></p>
-      <p><strong>Email: </strong> <span id="student-email"></span></p>
-      <p><strong>Class: </strong> <span id="student-class"></span></p>
-      
-       </div>
-       <div class="card">
-        <tr>
-         <p><strong>First Language:  </strong> <span id="firstLang"></span></p>
-      <p><strong>Second Language: </strong> <span id="secondLang"></span></p>
-      <p><strong>Third Language:  </strong> <span id="thirdLang"></span></p>
-      <p><strong>Math: </strong> <span id="math"></span></p>
-       <p><strong>Science:  </strong> <span id="science"></span></p>
-      <p><strong>Social:  </strong> <span id="social"></span></p>
-      <br>
-        </tr>
-
-        <p><strong>Total Marks:  </strong> <span id="Total"></span></p>
-      <button onclick="logout()">Logout</button>
-      <button onclick="changepass()">Change Password</button>
+          <p><strong>Total Marks:  </strong> <span id="Total"></span></p>
+        <button onclick="logout()">Logout</button>
+        <button onclick="changepass()">Change Password</button>
+      </div>
+      <div id="changePasswordPopup" class="changePass-popup">
+    <div class="popup-content">
+      <h2>Change Password</h2>
+      <form onsubmit="handleChangePassword(event)">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input type="password" id="currentPass" required />
+        </div>
+        <div class="form-group">
+          <label for="newPass">New Password</label>
+          <input type="password" id="newPass" required />
+        </div>
+        <div class="form-group">
+          <label for="confirmPass">Confirm New Password</label>
+          <input type="password" id="confirmPass" required />
+        </div>
+        <button type="submit">Update Password</button>
+        <p id="msg"></p>
+      </form>
+      <button onclick="closeChangePassword()">Close</button>
     </div>
-    <div id="changePasswordPopup" class="changePass-popup">
-  <div class="popup-content">
-    <h2>Change Password</h2>
-    <form onsubmit="handleChangePassword(event)">
-      <div class="form-group">
-        <label for="currentPassword">Current Password</label>
-        <input type="password" id="currentPass" required />
-      </div>
-      <div class="form-group">
-        <label for="newPass">New Password</label>
-        <input type="password" id="newPass" required />
-      </div>
-      <div class="form-group">
-        <label for="confirmPass">Confirm New Password</label>
-        <input type="password" id="confirmPass" required />
-      </div>
-      <button type="submit">Update Password</button>
-      <p id="msg"></p>
-    </form>
-    <button onclick="closeChangePassword()">Close</button>
-  </div>
 
-  </main>
-    <footer class="footer">
-  <div class="footer-content">
-    <p>&copy; 2025 Student Management System</p>
-    <p>Contact: <a href="mailto:support@school.com">support@school.com</a></p>
-  </div>
-</footer>
+    </main>
+      <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Student Management System</p>
+      <p>Contact: <a href="mailto:support@school.com">support@school.com</a></p>
+    </div>
+  </footer>
 
-  <script src="./scripts/studentDashBoard.js">
-  </script>
-  
-    </body>
-</html>
+    <script src="./scripts/studentDashBoard.js">
+    </script>
+    
+      </body>
+  </html>

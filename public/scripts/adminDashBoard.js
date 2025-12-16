@@ -1,146 +1,174 @@
+const API_BASE = "http://localhost:3000/api";
 
 window.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(localStorage.getItem("user"));
+
   if (!user || user.role !== "admin") {
-    alert("Unauthorized access");
-    window.location.href = "./index.html";
+    alert("Unauthorized");
+    window.location.href = "index.html";
     return;
   }
 
   fetchStudents();
+
+  document
+    .getElementById("addStudent")
+    .addEventListener("submit", addStudent);
+
+  document
+    .getElementById("assignMarksForm")
+    .addEventListener("submit", assignMarks);
+
+  document.querySelector(".menu-button").onclick = () =>
+    document.querySelector(".dropdown-content").classList.toggle("show");
 });
 
+/* ================= STUDENTS ================= */
 
 function fetchStudents() {
-  fetch("https://students-management-application-for.onrender.com/api/admin/students")
-    .then((res) => res.json())
-    .then((data) => {
+  fetch(`${API_BASE}/admin/students`)
+    .then(res => res.json())
+    .then(data => {
       const tbody = document.getElementById("studentTableBody");
       tbody.innerHTML = "";
-      data.students.forEach((student, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${student.admission_no}</td>
-          <td>${student.name}</td>
-          <td>${student.email}</td>
-          <td>${student.class}</td>
-    
-        `;
-        tbody.appendChild(row);
+
+      if (!data.students || data.students.length === 0) {
+        tbody.innerHTML =
+          "<tr><td colspan='5'>No students found</td></tr>";
+        return;
+      }
+
+      data.students.forEach((s, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${s.admission_no}</td>
+            <td>${s.name}</td>
+            <td>${s.email}</td>
+            <td>${s.class}</td>
+          </tr>`;
       });
     })
-    .catch((err) => {
-      console.error("Error fetching students", err);
-      alert("Failed to load student data");
+    .catch(err => {
+      console.error("Fetch students error:", err);
+      alert("Failed to load students");
     });
 }
 
+/* ================= ADD STUDENT ================= */
 
-document.getElementById("addStudent").addEventListener("submit", (e) => {
+function addStudent(e) {
   e.preventDefault();
 
-  const student = {
-    admission_no: document.getElementById("admission").value.trim(),
-    name: document.getElementById("name").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    class: document.getElementById("cls").value.trim(),
-    password: document.getElementById("DefaultPass").value.trim(),
-  };
+  const admission_no =
+    document.getElementById("admission").value.trim();
+  const name =
+    document.getElementById("name").value.trim();
+  const email =
+    document.getElementById("email").value.trim();
+  const studentClass =
+    document.getElementById("cls").value.trim();
+  const password =
+    document.getElementById("DefaultPass").value.trim();
 
-  fetch("https://students-management-application-for.onrender.com/api/admin/add-student", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(student),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      alert(data.message || "Student added successfully");
-      fetchStudents();
-    })
-    .catch((err) => {
-      console.error("Add student error:", err);
-      alert("Failed to add student");
-    });
-});
+  if (!admission_no || !name || !email || !studentClass || !password) {
+    alert("All fields are required");
+    return;
+  }
 
-
-document.getElementById("assignMarksForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const admissionNo = document.getElementById("assignMarks").value.trim();
-  const firstLang = parseInt(document.getElementById("firstLang").value.trim()) || 0;
-  const secondLang = parseInt(document.getElementById("secondLang").value.trim()) || 0;
-  const thirdLang = parseInt(document.getElementById("thirdLang").value.trim()) || 0;
-  const maths = parseInt(document.getElementById("maths").value.trim()) || 0;
-  const science = parseInt(document.getElementById("science").value.trim()) || 0;
-  const social = parseInt(document.getElementById("social").value.trim()) || 0;
-
-  fetch("https://students-management-application-for.onrender.com/api/admin/assign-marks", {
+  fetch(`${API_BASE}/admin/add-student`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      admission_no: admissionNo,
-      first_language: firstLang,
-      second_language: secondLang,
-      third_language: thirdLang,
-      maths: maths,
-      science: science,
-      social: social
+      admission_no,
+      name,
+      email,
+      class: studentClass,
+      password,
     }),
   })
-    .then((res) => res.json())
-    .then((data) => {
-      alert(data.message || "Marks assigned successfully");
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
       fetchStudents();
+      document.getElementById("addStudent").reset();
     })
-    .catch((err) => {
-      console.error("Error assigning subject-wise marks:", err);
-      alert("Failed to assign marks");
+    .catch(err => {
+      console.error("Add student error:", err);
+      alert("Failed to add student");
     });
-});
-
-
-function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "./index.html";
 }
 
+/* ================= ASSIGN MARKS ================= */
 
-document.querySelector(".menu-button").addEventListener("click", () => {
-  document.querySelector(".dropdown-content").classList.toggle("show");
-});
+function assignMarks(e) {
+  e.preventDefault();
 
+  const admission_no =
+    document.getElementById("assignMarks").value.trim();
+
+  const first_language =
+    Number(document.getElementById("firstLang").value) || 0;
+  const second_language =
+    Number(document.getElementById("secondLang").value) || 0;
+  const third_language =
+    Number(document.getElementById("thirdLang").value) || 0;
+  const maths =
+    Number(document.getElementById("maths").value) || 0;
+  const science =
+    Number(document.getElementById("science").value) || 0;
+  const social =
+    Number(document.getElementById("social").value) || 0;
+
+  if (!admission_no) {
+    alert("Admission number is required");
+    return;
+  }
+
+  fetch(`${API_BASE}/admin/assign-marks`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      admission_no,
+      first_language,
+      second_language,
+      third_language,
+      maths,
+      science,
+      social,
+    }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      document.getElementById("assignMarksForm").reset();
+    })
+    .catch(err => {
+      console.error("Assign marks error:", err);
+      alert("Failed to assign marks");
+    });
+}
+
+/* ================= CHANGE PASSWORD ================= */
 
 function changePassword() {
   document.getElementById("changePasswordPopup").style.display = "flex";
 }
+
 function closeChangePassword() {
   document.getElementById("changePasswordPopup").style.display = "none";
 }
 
-
-function handleChangePassword(event) {
-  event.preventDefault();
+function handleChangePassword(e) {
+  e.preventDefault();
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const currentPassword = document.getElementById("currentPass").value;
-  const newPassword = document.getElementById("newPass").value;
-  const confirmPassword = document.getElementById("confirmPass").value;
-  const msg = document.getElementById("msg");
+  const currentPassword =
+    document.getElementById("currentPass").value;
+  const newPassword =
+    document.getElementById("newPass").value;
 
-  msg.textContent = "";
-
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    msg.textContent = "All fields are required.";
-    return;
-  }
-  if (newPassword !== confirmPassword) {
-    msg.textContent = "New passwords do not match.";
-    return;
-  }
-
-  fetch("https://students-management-application-for.onrender.com/api/auth/change-password", {
+  fetch(`${API_BASE}/auth/change-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -149,60 +177,45 @@ function handleChangePassword(event) {
       newPassword,
     }),
   })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.message === "Password updated successfully") {
-        msg.style.color = "green";
-        msg.textContent = "Password changed!";
-        closeChangePassword();
-        alert("Password changed successfully!");
-      } else {
-        msg.style.color = "red";
-        msg.textContent = data.message || "Failed to change password";
-      }
-    })
-    .catch((err) => {
-      console.error("Password update error", err);
-      msg.textContent = "Server error";
-    });
+    .then(res => res.json())
+    .then(data => alert(data.message))
+    .catch(() => alert("Failed to change password"));
 }
 
+/* ================= RESET STUDENT PASSWORD ================= */
 
 function openResetPopup() {
-  document.getElementById('resetStudentPasswordPopup').style.display = 'flex';
+  document.getElementById("resetStudentPasswordPopup").style.display = "flex";
 }
+
 function closeResetPopup() {
-  document.getElementById('resetStudentPasswordPopup').style.display = 'none';
+  document.getElementById("resetStudentPasswordPopup").style.display = "none";
 }
 
+function handleResetStudentPassword(e) {
+  e.preventDefault();
 
-async function handleResetStudentPassword(event) {
-  event.preventDefault();
+  const email =
+    document.getElementById("studentResetEmail").value.trim();
+  const newPassword =
+    document.getElementById("studentNewPassword").value.trim();
 
-  const email = document.getElementById('studentResetEmail').value.trim();
-  const newPassword = document.getElementById('studentNewPassword').value.trim();
-
-  if (!email || !newPassword) {
-    document.getElementById('resetMsg').textContent = "All fields are required.";
-    return;
-  }
-
-  try {
-    const response = await fetch('https://students-management-application-for.onrender.com/api/admin/reset-student-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, newPassword })
-    });
-
-    const result = await response.json();
-    document.getElementById('resetMsg').textContent = result.message;
-
-    if (response.ok) {
-      document.getElementById('resetStudentPasswordForm').reset();
+  fetch(`${API_BASE}/admin/reset-student-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, newPassword }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("resetMsg").textContent = data.message;
       setTimeout(closeResetPopup, 1500);
-    }
-  } catch (error) {
-    console.error('Reset error:', error);
-    document.getElementById('resetMsg').textContent = 'Failed to reset password.';
-  }
+    })
+    .catch(() => alert("Failed to reset password"));
+}
+
+/* ================= LOGOUT ================= */
+
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "index.html";
 }

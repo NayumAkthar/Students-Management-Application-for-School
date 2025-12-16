@@ -1,3 +1,6 @@
+const API_BASE = "http://localhost:3000/api";
+
+
 function handleSubmit(event) {
   event.preventDefault();
 
@@ -6,7 +9,6 @@ function handleSubmit(event) {
 
   const emailError = document.getElementById("loginEmailError");
   const passwordError = document.getElementById("loginPasswordError");
-
 
   emailError.textContent = "";
   passwordError.textContent = "";
@@ -17,39 +19,28 @@ function handleSubmit(event) {
     return;
   }
 
-
-  fetch("https://students-management-application-for.onrender.com/api/auth/login", {
+  fetch(`${API_BASE}/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   })
-    .then(async (res) => {
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
+    .then(res => res.json())
+    .then(data => {
+      if (!data.token) {
+        alert(data.message || "Login failed");
+        return;
       }
 
-      
-     localStorage.setItem("user", JSON.stringify({ 
-        token: data.token, 
-        role: data.role, 
-        email: email 
-    }));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ email, role: data.role, token: data.token })
+      );
 
-      
       if (data.role === "admin") {
         window.location.href = "adminDashBoard.html";
-      } else if (data.role === "student") {
-        window.location.href = "studentDashBoard.html";
       } else {
-        alert("Unknown user role");
+        window.location.href = "studentDashBoard.html";
       }
     })
-    .catch((err) => {
-      console.error("Login error:", err);
-      alert(err.message || "Server error. Try again later.");
-    });
+    .catch(() => alert("Server error"));
 }
